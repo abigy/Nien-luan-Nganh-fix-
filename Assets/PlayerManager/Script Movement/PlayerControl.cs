@@ -229,6 +229,15 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill"",
+                    ""type"": ""Button"",
+                    ""id"": ""b2df83ae-c8b8-4d97-8825-4ec5d41a5415"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -275,6 +284,17 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""action"": ""Attack_right"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7962b917-9773-450e-a061-2234587c2022"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -292,6 +312,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         m_Playeraction_Jump = m_Playeraction.FindAction("Jump", throwIfNotFound: true);
         m_Playeraction_Attack_left = m_Playeraction.FindAction("Attack_left", throwIfNotFound: true);
         m_Playeraction_Attack_right = m_Playeraction.FindAction("Attack_right", throwIfNotFound: true);
+        m_Playeraction_Skill = m_Playeraction.FindAction("Skill", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -419,6 +440,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
     private readonly InputAction m_Playeraction_Jump;
     private readonly InputAction m_Playeraction_Attack_left;
     private readonly InputAction m_Playeraction_Attack_right;
+    private readonly InputAction m_Playeraction_Skill;
     public struct PlayeractionActions
     {
         private @PlayerControl m_Wrapper;
@@ -427,6 +449,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Playeraction_Jump;
         public InputAction @Attack_left => m_Wrapper.m_Playeraction_Attack_left;
         public InputAction @Attack_right => m_Wrapper.m_Playeraction_Attack_right;
+        public InputAction @Skill => m_Wrapper.m_Playeraction_Skill;
         public InputActionMap Get() { return m_Wrapper.m_Playeraction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -448,6 +471,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @Attack_right.started += instance.OnAttack_right;
             @Attack_right.performed += instance.OnAttack_right;
             @Attack_right.canceled += instance.OnAttack_right;
+            @Skill.started += instance.OnSkill;
+            @Skill.performed += instance.OnSkill;
+            @Skill.canceled += instance.OnSkill;
         }
 
         private void UnregisterCallbacks(IPlayeractionActions instance)
@@ -464,6 +490,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @Attack_right.started -= instance.OnAttack_right;
             @Attack_right.performed -= instance.OnAttack_right;
             @Attack_right.canceled -= instance.OnAttack_right;
+            @Skill.started -= instance.OnSkill;
+            @Skill.performed -= instance.OnSkill;
+            @Skill.canceled -= instance.OnSkill;
         }
 
         public void RemoveCallbacks(IPlayeractionActions instance)
@@ -493,5 +522,6 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnAttack_left(InputAction.CallbackContext context);
         void OnAttack_right(InputAction.CallbackContext context);
+        void OnSkill(InputAction.CallbackContext context);
     }
 }

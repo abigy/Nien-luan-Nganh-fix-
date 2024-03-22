@@ -12,6 +12,18 @@ public class InputManager : MonoBehaviour
     PlayerManager playerManager;
     PlayerInventory playerInventory;
 
+
+    [SerializeField]
+    [Header("Slash kill")]
+    private GameObject bulletSlash;
+    public float SlashSpeed;
+    public Transform playerLook;
+    public float SlashForce;
+    public float fireRate;
+    private float FireDelay = 0f;
+    public bool Slash;
+    public float range = 100f;
+
     public Vector2 movementInput;
     public Vector2 cameraInput;
 
@@ -63,6 +75,7 @@ public class InputManager : MonoBehaviour
 
     public void HandleAllInputs()
     {
+        ShootInput();
         HandleMovementInput();
         HandlePlayerSprinting();
         HandleJumpInput();
@@ -135,5 +148,27 @@ public class InputManager : MonoBehaviour
         {
             playerAttack.HandleHeavyAttack(playerInventory.LeftWeapon);
         }      
+    }
+
+    public void ShootInput()
+    {
+        playerControl.Playeraction.Skill.performed += i => Slash = true;
+        RaycastHit hit;
+        if (Slash == true && Time.time >= FireDelay && Physics.Raycast(playerLook.transform.position, playerLook.transform.forward, out hit, range))
+        {
+            Slash = false;
+            //Debug.Log("bang");
+            FireDelay = Time.time + 1f / fireRate;
+
+            if (hit.rigidbody != null)
+            {
+                hit.rigidbody.AddForce(-hit.normal * SlashForce);
+                //Debug.Log("Va cham");
+            }
+            GameObject SlashSkill = Instantiate(bulletSlash, playerLook.transform.position, transform.rotation);
+            SlashSkill.GetComponent<Rigidbody>().AddForce(transform.forward * SlashSpeed);
+            //Destroy(SlashSkill, 2);
+        }
+
     }
 }
