@@ -1,7 +1,9 @@
 ﻿using SG;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
@@ -11,7 +13,7 @@ public class InputManager : MonoBehaviour
     PlayerAttack playerAttack;
     PlayerManager playerManager;
     PlayerInventory playerInventory;
-
+    EnemyState enemyState;
 
     [SerializeField]
     [Header("Slash kill")]
@@ -23,7 +25,23 @@ public class InputManager : MonoBehaviour
     private float FireDelay = 0f;
     public bool Slash;
     public float range = 100f;
+    public float maxDistance = 1;
 
+    [Header("Storm Skill")]
+    public float gravityStorm;
+    Rigidbody playerRb;
+    public float gravityMultiplier;
+    public bool Storm;
+    public bool smash;
+    public float explosionForce;
+    public float explosionRadius;
+    public int damgeStorm;
+    public Transform CrackPos;
+    public GameObject stormEffect;
+    public bool collided;
+    Vector3 direction;
+
+    [Header("Another variable")]
     public Vector2 movementInput;
     public Vector2 cameraInput;
 
@@ -46,6 +64,8 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
+        enemyState = FindObjectOfType<EnemyState>();
+        playerRb = GetComponent<Rigidbody>();
         playerAttack = GetComponent<PlayerAttack>();
         animationManager = GetComponent<AnimationManager>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
@@ -75,6 +95,7 @@ public class InputManager : MonoBehaviour
 
     public void HandleAllInputs()
     {
+        SmashSkill();
         ShootInput();
         HandleMovementInput();
         HandlePlayerSprinting();
@@ -171,4 +192,56 @@ public class InputManager : MonoBehaviour
         }
 
     }
+
+    
+    public void SmashSkill()
+    {
+        playerControl.Playeraction.Storm_skill.performed += i => Storm = true;
+
+        var enemies = FindObjectsOfType<EnemyState>();
+        if (playerLocomotion.isGround == false && Storm && !smash)
+        {
+            smash = true;
+            /*if()
+            {
+                GameObject stormSkill = Instantiate(stormEffect, CrackPos.transform.position, transform.rotation);
+            }*/
+
+            float jumpingVelocity = Mathf.Sqrt(-2 * gravityMultiplier * gravityStorm);
+            Vector3 playerVelocity = direction;
+            playerVelocity.y = -jumpingVelocity;
+            playerRb.velocity = playerVelocity;
+
+            for(int i = 0; i < enemies.Length; i++)
+            {
+                if(enemies != null)
+                {
+                    enemies[i].GetComponent<Rigidbody>().AddExplosionForce(explosionForce,
+                                transform.position, explosionRadius, 0.0f, ForceMode.Impulse);
+                    enemyState.TakeDame(damgeStorm);
+                }
+            }
+
+            //smash = false;
+            Storm = false;
+        }
+
+        if(playerLocomotion.isGround == true && smash == true)
+        {
+            GameObject stormSkill = Instantiate(stormEffect, CrackPos.transform.position, transform.rotation);
+            smash = false;
+            Destroy(stormSkill,1);
+        }
+    }
+
+   /* private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Default" && collided == true)
+        {
+            collided = false;
+            GameObject stormSkill = Instantiate(stormEffect, playerLook.transform.position, transform.rotation);
+            Destroy(stormSkill,1);
+        }
+        collided = true;
+    }*/
 }

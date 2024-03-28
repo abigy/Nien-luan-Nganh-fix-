@@ -7,11 +7,11 @@ public class DameEnemy : MonoBehaviour
     public int damage = 25;
     private void OnTriggerEnter(Collider other)
     {
-        EnemyState playerStates = other.GetComponent<EnemyState>();
+        EnemyState EnemyStates = other.GetComponent<EnemyState>();
 
-        if (playerStates != null)
+        if (EnemyStates != null)
         {
-            playerStates.TakeDame(damage);
+            EnemyStates.TakeDame(damage);
         }
     }
 }

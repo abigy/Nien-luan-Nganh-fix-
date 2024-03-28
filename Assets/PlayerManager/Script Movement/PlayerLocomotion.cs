@@ -23,6 +23,12 @@ public class PlayerLocomotion : MonoBehaviour
     public bool isJumping;
     public bool readyDBJump = false;
 
+    [Header("Power Up System")]
+    public bool hasPowerUp = false;
+    private Coroutine powerUpCountDown;
+    public GameObject heightEffect;
+    public float currentJump;
+    public PowerUpType currentPower = PowerUpType.None;
 
     [Header("Falling")]
     public float inAirTime;
@@ -46,6 +52,7 @@ public class PlayerLocomotion : MonoBehaviour
     private void Awake()
     {
         isGround = true;
+        currentJump = jumpingHeight;
         animationManager = GetComponent<AnimationManager>();
         playerManager = GetComponent<PlayerManager>();
         inputManager = GetComponent<InputManager>();
@@ -236,5 +243,38 @@ public class PlayerLocomotion : MonoBehaviour
             readyDBJump = false;
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("PowerUp"))
+        {
+            hasPowerUp = true;
 
+            currentPower = other.gameObject.GetComponent<PowerUp>().PowerType;
+            if(currentPower == PowerUpType.HeightJump)
+            {
+                heightEffect.gameObject.SetActive(true);
+                jumpingHeight *= 2;
+                Debug.Log("Jump power");
+            }
+            Destroy(other.gameObject);
+            
+            if (powerUpCountDown != null)
+            {
+                Debug.Log("Has Power");
+                StartCoroutine(CountDownPower());
+            }
+            //Destroy(PowerHeight, 7);
+            powerUpCountDown = StartCoroutine(CountDownPower());
+        }
+    }
+
+    IEnumerator CountDownPower()
+    {
+        yield return new WaitForSeconds(7);
+        hasPowerUp = false;
+        currentPower = PowerUpType.None;
+        jumpingHeight = currentJump;
+        heightEffect.gameObject.SetActive(false);
+        Debug.Log("End power");
+    }
 }
