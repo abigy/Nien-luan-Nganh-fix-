@@ -22,9 +22,11 @@ public class InputManager : MonoBehaviour
     public Transform playerLook;
     public float SlashForce;
     public float fireRate;
-    private float FireDelay = 0f;
     public bool Slash;
     public float range = 100f;
+    public bool readyToSlash = true;
+    public int SlashCount;
+    private Coroutine CountDownShoot;
     public float maxDistance = 1;
 
     [Header("Storm Skill")]
@@ -95,7 +97,7 @@ public class InputManager : MonoBehaviour
 
     public void HandleAllInputs()
     {
-        SmashSkill();
+        StompSkill();
         ShootInput();
         HandleMovementInput();
         HandlePlayerSprinting();
@@ -173,14 +175,15 @@ public class InputManager : MonoBehaviour
 
     public void ShootInput()
     {
+        
         playerControl.Playeraction.Skill.performed += i => Slash = true;
         RaycastHit hit;
-        if (Slash == true && Time.time >= FireDelay && Physics.Raycast(playerLook.transform.position, playerLook.transform.forward, out hit, range))
+        if (Slash == true && readyToSlash == true && playerLocomotion.isGround && Physics.Raycast(playerLook.transform.position, playerLook.transform.forward, out hit, range))
         {
             Slash = false;
+            readyToSlash = false;
             //Debug.Log("bang");
-            FireDelay = Time.time + 1f / fireRate;
-
+            //animationManager.PlayerTargetAnimation("Slash", true);
             if (hit.rigidbody != null)
             {
                 hit.rigidbody.AddForce(-hit.normal * SlashForce);
@@ -188,13 +191,16 @@ public class InputManager : MonoBehaviour
             }
             GameObject SlashSkill = Instantiate(bulletSlash, playerLook.transform.position, transform.rotation);
             SlashSkill.GetComponent<Rigidbody>().AddForce(transform.forward * SlashSpeed);
+            //SlashCount++;
+            //int ObjectSlash = SlashCount - (SlashCount - 1);
             //Destroy(SlashSkill, 2);
+            CountDownShoot = StartCoroutine(CountDownSlash());
         }
-
+        //readyToSlash = true;
     }
 
     
-    public void SmashSkill()
+    public void StompSkill()
     {
         playerControl.Playeraction.Storm_skill.performed += i => Storm = true;
 
@@ -202,22 +208,19 @@ public class InputManager : MonoBehaviour
         if (playerLocomotion.isGround == false && Storm && !smash)
         {
             smash = true;
-            /*if()
-            {
-                GameObject stormSkill = Instantiate(stormEffect, CrackPos.transform.position, transform.rotation);
-            }*/
-
             float jumpingVelocity = Mathf.Sqrt(-2 * gravityMultiplier * gravityStorm);
             Vector3 playerVelocity = direction;
             playerVelocity.y = -jumpingVelocity;
             playerRb.velocity = playerVelocity;
+            
 
             for(int i = 0; i < enemies.Length; i++)
             {
                 if(enemies != null)
                 {
-                    enemies[i].GetComponent<Rigidbody>().AddExplosionForce(explosionForce,
-                                transform.position, explosionRadius, 0.0f, ForceMode.Impulse);
+                    //enemies[i].GetComponent<Rigidbody>().AddExplosionForce(explosionForce,
+                    // transform.position, explosionRadius, 0.0f, ForceMode.Impulse);
+                    enemies[i].GetComponent<Rigidbody>().AddForce(transform.up * explosionForce);
                     enemyState.TakeDame(damgeStorm);
                 }
             }
@@ -234,14 +237,11 @@ public class InputManager : MonoBehaviour
         }
     }
 
-   /* private void OnCollisionEnter(Collision collision)
+    IEnumerator CountDownSlash()
     {
-        if (collision.gameObject.tag == "Default" && collided == true)
-        {
-            collided = false;
-            GameObject stormSkill = Instantiate(stormEffect, playerLook.transform.position, transform.rotation);
-            Destroy(stormSkill,1);
-        }
-        collided = true;
-    }*/
+        yield return new WaitForSeconds(3);
+        Debug.Log("Already Slash");
+        readyToSlash = true;
+        Slash = false;
+    }
 }

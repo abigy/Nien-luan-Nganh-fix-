@@ -248,7 +248,6 @@ public class PlayerLocomotion : MonoBehaviour
         if (other.CompareTag("PowerUp"))
         {
             hasPowerUp = true;
-
             currentPower = other.gameObject.GetComponent<PowerUp>().PowerType;
             if(currentPower == PowerUpType.HeightJump)
             {
