@@ -13,6 +13,7 @@ public class InputManager : MonoBehaviour
     PlayerAttack playerAttack;
     PlayerManager playerManager;
     PlayerInventory playerInventory;
+    PlayerState playerState;
     EnemyState enemyState;
 
     [SerializeField]
@@ -26,18 +27,20 @@ public class InputManager : MonoBehaviour
     public float range = 100f;
     public bool readyToSlash = true;
     public int SlashCount;
+    public int manaToSlash;
     private Coroutine CountDownShoot;
     public float maxDistance = 1;
 
-    [Header("Storm Skill")]
+    [Header("Stomp Skill")]
     public float gravityStorm;
     Rigidbody playerRb;
     public float gravityMultiplier;
     public bool Storm;
-    public bool smash;
+    public bool readyToStomp;
     public float explosionForce;
     public float explosionRadius;
     public int damgeStorm;
+    public int manaToStomp;
     public Transform CrackPos;
     public GameObject stormEffect;
     public bool collided;
@@ -66,6 +69,7 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
+        playerState = GetComponent<PlayerState>();
         enemyState = FindObjectOfType<EnemyState>();
         playerRb = GetComponent<Rigidbody>();
         playerAttack = GetComponent<PlayerAttack>();
@@ -182,18 +186,14 @@ public class InputManager : MonoBehaviour
         {
             Slash = false;
             readyToSlash = false;
-            //Debug.Log("bang");
+            playerState.manaSkill(manaToSlash);
             //animationManager.PlayerTargetAnimation("Slash", true);
             if (hit.rigidbody != null)
             {
                 hit.rigidbody.AddForce(-hit.normal * SlashForce);
-                //Debug.Log("Va cham");
             }
             GameObject SlashSkill = Instantiate(bulletSlash, playerLook.transform.position, transform.rotation);
             SlashSkill.GetComponent<Rigidbody>().AddForce(transform.forward * SlashSpeed);
-            //SlashCount++;
-            //int ObjectSlash = SlashCount - (SlashCount - 1);
-            //Destroy(SlashSkill, 2);
             CountDownShoot = StartCoroutine(CountDownSlash());
         }
         //readyToSlash = true;
@@ -203,39 +203,41 @@ public class InputManager : MonoBehaviour
     public void StompSkill()
     {
         playerControl.Playeraction.Storm_skill.performed += i => Storm = true;
-
         var enemies = FindObjectsOfType<EnemyState>();
-        if (playerLocomotion.isGround == false && Storm && !smash)
+        if (playerLocomotion.isGround == false && Storm && !readyToStomp && playerState.Ultimate == true)
         {
-            smash = true;
+            Storm = false;
+            playerState.Ultimate = false;
             float jumpingVelocity = Mathf.Sqrt(-2 * gravityMultiplier * gravityStorm);
             Vector3 playerVelocity = direction;
             playerVelocity.y = -jumpingVelocity;
             playerRb.velocity = playerVelocity;
-            
+            playerState.manaSkill(playerState.maxMana);
 
-            for(int i = 0; i < enemies.Length; i++)
+            for (int i = 0; i < enemies.Length; i++)
             {
                 if(enemies != null)
                 {
+                    readyToStomp = true;
                     //enemies[i].GetComponent<Rigidbody>().AddExplosionForce(explosionForce,
-                    // transform.position, explosionRadius, 0.0f, ForceMode.Impulse);
+                     //transform.position, explosionRadius, 0.0f, ForceMode.Impulse);
                     enemies[i].GetComponent<Rigidbody>().AddForce(transform.up * explosionForce);
                     enemyState.TakeDame(damgeStorm);
                 }
             }
-
             //smash = false;
-            Storm = false;
+            readyToStomp = false;
         }
-
-        if(playerLocomotion.isGround == true && smash == true)
+        Storm = false;
+        if(playerLocomotion.isGround == true && readyToStomp == true)
         {
             GameObject stormSkill = Instantiate(stormEffect, CrackPos.transform.position, transform.rotation);
-            smash = false;
+            readyToStomp = false;
             Destroy(stormSkill,1);
         }
+
     }
+
 
     IEnumerator CountDownSlash()
     {

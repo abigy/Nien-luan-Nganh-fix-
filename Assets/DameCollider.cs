@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class DameCollider : MonoBehaviour
 {
     Collider damageCollider;
+    PlayerState playerState;
     public int currentHitDamage = 25;
 
     private void Awake()
     {
+        playerState = GameObject.Find("Player").GetComponent<PlayerState>();
         damageCollider = GetComponent<Collider>();
         damageCollider.gameObject.SetActive(true);
         damageCollider.isTrigger = true;
@@ -41,8 +44,9 @@ public class DameCollider : MonoBehaviour
         {
             EnemyState enemyState = collision.GetComponent<EnemyState>();
 
-            if(enemyState != null)
+            if (enemyState != null)
             {
+                playerState.recoverMana(15);
                 enemyState.TakeDame(currentHitDamage);
             }
         }

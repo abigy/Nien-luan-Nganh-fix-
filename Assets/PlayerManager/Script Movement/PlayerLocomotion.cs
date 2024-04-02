@@ -14,6 +14,7 @@ public class PlayerLocomotion : MonoBehaviour
     Vector3 moveDirection;
     Transform cameraObj;
     Rigidbody playerRb;
+    PlayerState playerState;
 
     public Transform myTransform;
 
@@ -53,6 +54,7 @@ public class PlayerLocomotion : MonoBehaviour
     {
         isGround = true;
         currentJump = jumpingHeight;
+        playerState = GetComponent<PlayerState>();
         animationManager = GetComponent<AnimationManager>();
         playerManager = GetComponent<PlayerManager>();
         inputManager = GetComponent<InputManager>();

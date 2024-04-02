@@ -8,6 +8,7 @@ public class PlayerAttack : MonoBehaviour
 {
     AnimationManager animationManager;
     InputManager inputManager;
+
     public string lastAttack;
 
     PlayerManager playerManager;
@@ -35,6 +36,7 @@ public class PlayerAttack : MonoBehaviour
     public void HandleLightAttack(WeaponItem weapon)
     {
         animationManager.PlayerTargetAnimation(weapon.Light_Attack_1, true);
+
         lastAttack = weapon.Light_Attack_1;
     }
 
