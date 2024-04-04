@@ -82,11 +82,11 @@ public class PlayerState : MonoBehaviour
         if (currentMana > 0)
         {
             hasMana = true;
-            if(currentMana == maxMana)
+            if(currentMana >= maxMana)
             {
                 Ultimate = true;
+                Debug.Log("Ultimate");
                 currentMana = maxMana;
-                Debug.Log("Ultimate" );
             }
         }
         else if (currentMana <= 0)

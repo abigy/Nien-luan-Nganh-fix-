@@ -182,7 +182,7 @@ public class InputManager : MonoBehaviour
         
         playerControl.Playeraction.Skill.performed += i => Slash = true;
         RaycastHit hit;
-        if (Slash == true && readyToSlash == true && playerLocomotion.isGround && Physics.Raycast(playerLook.transform.position, playerLook.transform.forward, out hit, range))
+        if (Slash == true && playerState.hasMana && readyToSlash == true && playerLocomotion.isGround && Physics.Raycast(playerLook.transform.position, playerLook.transform.forward, out hit, range))
         {
             Slash = false;
             readyToSlash = false;
@@ -197,6 +197,7 @@ public class InputManager : MonoBehaviour
             CountDownShoot = StartCoroutine(CountDownSlash());
         }
         //readyToSlash = true;
+        Slash = false;
     }
 
     
@@ -226,7 +227,7 @@ public class InputManager : MonoBehaviour
                 }
             }
             //smash = false;
-            readyToStomp = false;
+           // readyToStomp = false;
         }
         Storm = false;
         if(playerLocomotion.isGround == true && readyToStomp == true)
