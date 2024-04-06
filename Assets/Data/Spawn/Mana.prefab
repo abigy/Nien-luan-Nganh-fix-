@@ -13,11 +13,11 @@ GameObject:
   - component: {fileID: 6039073913230755810}
   - component: {fileID: 998514519712761296}
   - component: {fileID: 8620071883770594480}
-  - component: {fileID: -6507086059766603746}
-  - component: {fileID: 2335670324889952315}
+  - component: {fileID: 8125428593423035620}
+  - component: {fileID: 273668255026534698}
   m_Layer: 0
-  m_Name: Jump
-  m_TagString: PowerUp
+  m_Name: Mana
+  m_TagString: Bonus
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 12fe3827225c88147800fa816b1188c5, type: 2}
+  - {fileID: 2100000, guid: 281f105c07ebeda439906d2e94eb4921, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abef3ba730db49949bd0672c52a0df18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PowerType: 1
+  PowerType: 2
 --- !u!65 &8620071883770594480
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -113,7 +113,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.0499358, y: 1.0499359, z: 1.0749035}
   m_Center: {x: 0.008322636, y: 0, z: 0.004161257}
---- !u!54 &-6507086059766603746
+--- !u!54 &8125428593423035620
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,7 +129,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &2335670324889952315
+--- !u!65 &273668255026534698
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

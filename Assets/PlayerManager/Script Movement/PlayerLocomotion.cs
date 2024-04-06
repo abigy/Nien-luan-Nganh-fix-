@@ -29,6 +29,7 @@ public class PlayerLocomotion : MonoBehaviour
     private Coroutine powerUpCountDown;
     public GameObject heightEffect;
     public float currentJump;
+    public int secondCountDown;
     public PowerUpType currentPower = PowerUpType.None;
 
     [Header("Falling")]
@@ -251,27 +252,40 @@ public class PlayerLocomotion : MonoBehaviour
         {
             hasPowerUp = true;
             currentPower = other.gameObject.GetComponent<PowerUp>().PowerType;
+
             if(currentPower == PowerUpType.HeightJump)
             {
                 heightEffect.gameObject.SetActive(true);
                 jumpingHeight *= 2;
                 Debug.Log("Jump power");
             }
+
             Destroy(other.gameObject);
             
             if (powerUpCountDown != null)
             {
-                Debug.Log("Has Power");
-                StartCoroutine(CountDownPower());
+               Debug.Log("Has Power Jump");
+               StartCoroutine(CountDownPower());
             }
-            //Destroy(PowerHeight, 7);
             powerUpCountDown = StartCoroutine(CountDownPower());
         }
+        //Bonus mana or heath (Not powerup)
+        if (other.CompareTag("Bonus"))
+        {
+            currentPower = other.gameObject.GetComponent<PowerUp>().PowerType;
+            if (currentPower == PowerUpType.bonusMana)
+            {
+                Debug.Log("Has full mana");
+                playerState.recoverMana(playerState.maxMana);
+            }
+            Destroy(other.gameObject);
+        }
+
     }
 
     IEnumerator CountDownPower()
     {
-        yield return new WaitForSeconds(7);
+        yield return new WaitForSeconds(secondCountDown);
         hasPowerUp = false;
         currentPower = PowerUpType.None;
         jumpingHeight = currentJump;

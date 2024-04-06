@@ -6,7 +6,8 @@ using UnityEngine;
 public enum PowerUpType
 {
     None,
-    HeightJump
+    HeightJump,
+    bonusMana
 }
 public class PowerUp : MonoBehaviour
 {

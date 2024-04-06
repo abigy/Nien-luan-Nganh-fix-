@@ -15,8 +15,8 @@ public class PlayerState : MonoBehaviour
     public int maxMana;
     public int currentMana;
     public ManaBar manaBar;
-    public bool hasMana = true;
-    public bool Ultimate = true;
+    public bool hasMana;
+    public bool Ultimate = false;
 
     AnimationManager animationManager;
 
@@ -34,6 +34,13 @@ public class PlayerState : MonoBehaviour
         maxMana = SetMaxMana_FromManathLevel();
         currentMana = maxMana;
         manaBar.SetMaxMana(maxMana);
+    }
+    private void Update()
+    {
+        if(currentMana < maxMana)
+        {
+            Ultimate = false;
+        }
     }
 
     private int SetMaxHealth_FromHealthLevel()
@@ -69,6 +76,7 @@ public class PlayerState : MonoBehaviour
         {
             currentMana = 0;
             hasMana = false;
+            Ultimate = false;
         }else if(currentMana > 0)
         {
             hasMana= true;
