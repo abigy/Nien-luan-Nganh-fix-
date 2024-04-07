@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerState : MonoBehaviour
 {
+    InputManager inputManager;
+
     [Header("Health")]
     public int healthLevel = 10;
     public int maxHealth;
@@ -18,14 +20,22 @@ public class PlayerState : MonoBehaviour
     public bool hasMana;
     public bool Ultimate = false;
 
+    [Header("Ultamate")]
+    public GameObject ultimateOBJ;
+
     AnimationManager animationManager;
 
     private void Awake()
     {
+        inputManager = GetComponent<InputManager>();    
         animationManager = GetComponentInChildren<AnimationManager>();
     }
     void Start()
     {
+        if (Ultimate)
+        {
+            ultimateOBJ.gameObject.SetActive(true);
+        }
         //Health
         maxHealth = SetMaxHealth_FromHealthLevel();
         currentHealth = maxHealth;
@@ -37,8 +47,9 @@ public class PlayerState : MonoBehaviour
     }
     private void Update()
     {
-        if(currentMana < maxMana)
+        if(currentMana < inputManager.manaToStomp)
         {
+            ultimateOBJ.gameObject.SetActive(false);
             Ultimate = false;
         }
     }
@@ -93,13 +104,20 @@ public class PlayerState : MonoBehaviour
             if(currentMana >= maxMana)
             {
                 Ultimate = true;
+                ultimateOBJ.gameObject.SetActive(true);
                 Debug.Log("Ultimate");
-                currentMana = maxMana;
+                currentMana = maxMana;  
+            }else if(currentMana >= inputManager.manaToStomp)
+            {
+                Ultimate = true;
+                ultimateOBJ.gameObject.SetActive(true);
+                Debug.Log("Ultimate");
             }
         }
         else if (currentMana <= 0)
         {
             hasMana = false;
+            ultimateOBJ.gameObject.SetActive(false);
             Ultimate = false;
         }
     }

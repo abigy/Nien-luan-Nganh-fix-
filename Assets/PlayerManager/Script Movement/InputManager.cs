@@ -187,7 +187,7 @@ public class InputManager : MonoBehaviour
             Slash = false;
             readyToSlash = false;
             playerState.manaSkill(manaToSlash);
-            //animationManager.PlayerTargetAnimation("Slash", true);
+            animationManager.PlayerTargetAnimation("Slash", true);
             if (hit.rigidbody != null)
             {
                 hit.rigidbody.AddForce(-hit.normal * SlashForce);
@@ -213,7 +213,7 @@ public class InputManager : MonoBehaviour
             Vector3 playerVelocity = direction;
             playerVelocity.y = -jumpingVelocity;
             playerRb.velocity = playerVelocity;
-            playerState.manaSkill(playerState.maxMana);
+            playerState.manaSkill(manaToStomp);
 
             for (int i = 0; i < enemies.Length; i++)
             {
@@ -223,8 +223,10 @@ public class InputManager : MonoBehaviour
                     //enemies[i].GetComponent<Rigidbody>().AddExplosionForce(explosionForce,
                      //transform.position, explosionRadius, 0.0f, ForceMode.Impulse);
                     enemies[i].GetComponent<Rigidbody>().AddForce(transform.up * explosionForce);
-                    enemyState.TakeDame(damgeStorm);
+                    //enemyState.TakeDame(damgeStorm);
+                    enemies[i].TakeDame(damgeStorm);
                 }
+                Debug.Log("Enemy: " + enemies[i]);
             }
             //smash = false;
            // readyToStomp = false;
