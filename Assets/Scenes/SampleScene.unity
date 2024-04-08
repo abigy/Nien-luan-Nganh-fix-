@@ -431,7 +431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e7b3c6fa197acd4f857412543e64707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthLevel: 100
+  healthLevel: 20
   maxHealth: 0
   currentHealth: 0
   healthBarEnemy: {fileID: 1359780002}
@@ -1366,7 +1366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e7b3c6fa197acd4f857412543e64707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthLevel: 100
+  healthLevel: 20
   maxHealth: 0
   currentHealth: 0
   healthBarEnemy: {fileID: 1620915643}
@@ -3400,7 +3400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e7b3c6fa197acd4f857412543e64707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthLevel: 100
+  healthLevel: 20
   maxHealth: 0
   currentHealth: 0
   healthBarEnemy: {fileID: 707679439}
