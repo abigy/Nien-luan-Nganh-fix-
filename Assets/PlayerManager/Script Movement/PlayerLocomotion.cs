@@ -13,7 +13,7 @@ public class PlayerLocomotion : MonoBehaviour
 
     Vector3 moveDirection;
     Transform cameraObj;
-    Rigidbody playerRb;
+    public Rigidbody playerRb;
     PlayerState playerState;
 
     public Transform myTransform;
@@ -23,6 +23,11 @@ public class PlayerLocomotion : MonoBehaviour
     public bool isGround;
     public bool isJumping;
     public bool readyDBJump = false;
+
+    [Header("Handle Dash")]
+    public float dash_force;
+    public bool readyToDash = true;
+    public float dash_coolDown;
 
     [Header("Power Up System")]
     public bool hasPowerUp = false;
@@ -54,6 +59,7 @@ public class PlayerLocomotion : MonoBehaviour
     private void Awake()
     {
         isGround = true;
+        readyToDash = true;
         currentJump = jumpingHeight;
         playerState = GetComponent<PlayerState>();
         animationManager = GetComponent<AnimationManager>();
@@ -95,10 +101,10 @@ public class PlayerLocomotion : MonoBehaviour
 
     public void HandleAllMovement()
     {
-        
+
         HandFallingAndLanding();
         if (playerManager.isInteracting) //check player đang Falling nếu player đang Falling thì return lại câu lệnh
-            return;                        //Vì đang Falling thì sẽ không có khả năng di chuyển hoặc xoay.        
+            return;                              
 
         HandleMovement();
         HandleRotation();
@@ -283,6 +289,18 @@ public class PlayerLocomotion : MonoBehaviour
 
     }
 
+    public void HanldeDashing()
+    {
+        if (readyToDash == true)
+        {
+            readyToDash = false;
+            StartCoroutine(HandleCountDownDash());
+            Vector3 playerLook = new Vector3(transform.forward.x * dash_force, 0f, transform.forward.z * dash_force);
+            playerRb.AddForce(playerLook, ForceMode.Impulse);
+            StartCoroutine(HandleCountDownDash());
+        }
+    }
+
     IEnumerator CountDownPower()
     {
         yield return new WaitForSeconds(secondCountDown);
@@ -291,5 +309,11 @@ public class PlayerLocomotion : MonoBehaviour
         jumpingHeight = currentJump;
         heightEffect.gameObject.SetActive(false);
         Debug.Log("End power");
+    }
+
+    IEnumerator HandleCountDownDash()
+    {
+        yield return new WaitForSeconds(dash_coolDown);
+        readyToDash = true;
     }
 }

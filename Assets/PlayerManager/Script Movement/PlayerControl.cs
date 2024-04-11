@@ -247,6 +247,15 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""flash"",
+                    ""type"": ""Button"",
+                    ""id"": ""69ef8876-046e-449b-9bc0-ddd5f2bcc71a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -315,6 +324,17 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""action"": ""Storm_skill"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""28b9b91d-ae17-43ac-b7db-6ce726397416"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""flash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -334,6 +354,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         m_Playeraction_Attack_right = m_Playeraction.FindAction("Attack_right", throwIfNotFound: true);
         m_Playeraction_Skill = m_Playeraction.FindAction("Skill", throwIfNotFound: true);
         m_Playeraction_Storm_skill = m_Playeraction.FindAction("Storm_skill", throwIfNotFound: true);
+        m_Playeraction_flash = m_Playeraction.FindAction("flash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -463,6 +484,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
     private readonly InputAction m_Playeraction_Attack_right;
     private readonly InputAction m_Playeraction_Skill;
     private readonly InputAction m_Playeraction_Storm_skill;
+    private readonly InputAction m_Playeraction_flash;
     public struct PlayeractionActions
     {
         private @PlayerControl m_Wrapper;
@@ -473,6 +495,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         public InputAction @Attack_right => m_Wrapper.m_Playeraction_Attack_right;
         public InputAction @Skill => m_Wrapper.m_Playeraction_Skill;
         public InputAction @Storm_skill => m_Wrapper.m_Playeraction_Storm_skill;
+        public InputAction @flash => m_Wrapper.m_Playeraction_flash;
         public InputActionMap Get() { return m_Wrapper.m_Playeraction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -500,6 +523,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @Storm_skill.started += instance.OnStorm_skill;
             @Storm_skill.performed += instance.OnStorm_skill;
             @Storm_skill.canceled += instance.OnStorm_skill;
+            @flash.started += instance.OnFlash;
+            @flash.performed += instance.OnFlash;
+            @flash.canceled += instance.OnFlash;
         }
 
         private void UnregisterCallbacks(IPlayeractionActions instance)
@@ -522,6 +548,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @Storm_skill.started -= instance.OnStorm_skill;
             @Storm_skill.performed -= instance.OnStorm_skill;
             @Storm_skill.canceled -= instance.OnStorm_skill;
+            @flash.started -= instance.OnFlash;
+            @flash.performed -= instance.OnFlash;
+            @flash.canceled -= instance.OnFlash;
         }
 
         public void RemoveCallbacks(IPlayeractionActions instance)
@@ -553,5 +582,6 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         void OnAttack_right(InputAction.CallbackContext context);
         void OnSkill(InputAction.CallbackContext context);
         void OnStorm_skill(InputAction.CallbackContext context);
+        void OnFlash(InputAction.CallbackContext context);
     }
 }

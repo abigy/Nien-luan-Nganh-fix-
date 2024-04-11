@@ -5,10 +5,16 @@ using UnityEngine;
 public class AnimationManager : MonoBehaviour
 {
     public Animator animator;
+    public InputManager inputManager;
     int horizontal;
+    public PlayerManager playerManager;
+    public PlayerLocomotion playerLocomotion;
     int vertical;
     private void Awake()
     {
+        inputManager = GetComponent<InputManager>();
+        playerManager = GetComponent <PlayerManager>();
+        playerLocomotion = GetComponent<PlayerLocomotion>();    
         animator = GetComponent<Animator>();
         horizontal = Animator.StringToHash("Horizontal");
         vertical = Animator.StringToHash("Vertical");
@@ -100,6 +106,7 @@ public class AnimationManager : MonoBehaviour
     {
         animator.SetBool("canDoCombo", true);
     }
+
 
     public void DisableCombo()
     {

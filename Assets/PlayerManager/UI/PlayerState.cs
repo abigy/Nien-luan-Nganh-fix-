@@ -27,6 +27,7 @@ public class PlayerState : MonoBehaviour
 
     private void Awake()
     {
+        hasMana = true;
         inputManager = GetComponent<InputManager>();    
         animationManager = GetComponentInChildren<AnimationManager>();
     }

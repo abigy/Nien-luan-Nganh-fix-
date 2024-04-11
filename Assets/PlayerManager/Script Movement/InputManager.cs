@@ -31,6 +31,10 @@ public class InputManager : MonoBehaviour
     private Coroutine CountDownShoot;
     public float maxDistance = 1;
 
+    [Header("Flash")]
+    public bool dash_input;
+    
+
     [Header("Stomp Skill")]
     public float gravityStorm;
     Rigidbody playerRb;
@@ -90,6 +94,7 @@ public class InputManager : MonoBehaviour
             playerControl.Playeraction.B.performed += i => b_Input = true;
             playerControl.Playeraction.B.canceled += i => b_Input = false;
             playerControl.Playeraction.Jump.performed += i => jump_Input = true;
+            playerControl.Playeraction.flash.performed += i => dash_input = true;
         }
         playerControl.Enable();
     }
@@ -101,6 +106,7 @@ public class InputManager : MonoBehaviour
 
     public void HandleAllInputs()
     {
+        dashDame();
         StompSkill();
         ShootInput();
         HandleMovementInput();
@@ -179,7 +185,6 @@ public class InputManager : MonoBehaviour
 
     public void ShootInput()
     {
-        
         playerControl.Playeraction.Skill.performed += i => Slash = true;
         RaycastHit hit;
         if (Slash == true && playerState.hasMana && readyToSlash == true && playerLocomotion.isGround && Physics.Raycast(playerLook.transform.position, playerLook.transform.forward, out hit, range))
@@ -239,6 +244,16 @@ public class InputManager : MonoBehaviour
             Destroy(stormSkill,1);
         }
 
+    }
+
+    public void dashDame()
+    {
+        playerControl.Playeraction.flash.performed += i => dash_input = true;
+        if (dash_input == true && playerLocomotion.isGround == true)
+        {
+            dash_input = false;
+            playerLocomotion.HanldeDashing();
+        }
     }
 
 
