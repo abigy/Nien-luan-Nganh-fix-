@@ -31,9 +31,12 @@ public class InputManager : MonoBehaviour
     private Coroutine CountDownShoot;
     public float maxDistance = 1;
 
-    [Header("Flash")]
+    [Header("Dash")]
     public bool dash_input;
-    
+    public bool readyToDash = true;
+    public float dash_coolDown;
+    public int dash_force;
+
 
     [Header("Stomp Skill")]
     public float gravityStorm;
@@ -73,6 +76,7 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
+        readyToDash = true;
         playerState = GetComponent<PlayerState>();
         enemyState = FindObjectOfType<EnemyState>();
         playerRb = GetComponent<Rigidbody>();
@@ -249,10 +253,27 @@ public class InputManager : MonoBehaviour
     public void dashDame()
     {
         playerControl.Playeraction.flash.performed += i => dash_input = true;
+
         if (dash_input == true && playerLocomotion.isGround == true)
         {
             dash_input = false;
-            playerLocomotion.HanldeDashing();
+            HanldeDashing();
+        }
+    }
+
+    public void HanldeDashing()
+    {
+        if (playerManager.isInteracting)
+            return;
+
+        if (readyToDash == true)
+        {
+            Debug.Log("Dash");
+            readyToDash = false;
+            animationManager.PlayerTargetAnimation("flash", true);
+            Vector3 playerLook = new Vector3(transform.forward.x * dash_force, 0f, transform.forward.z * dash_force);
+            playerRb.AddForce(playerLook, ForceMode.Impulse);
+            StartCoroutine(HandleCountDownDash());
         }
     }
 
@@ -263,5 +284,11 @@ public class InputManager : MonoBehaviour
         Debug.Log("Already Slash");
         readyToSlash = true;
         Slash = false;
+    }
+
+    IEnumerator HandleCountDownDash()
+    {
+        yield return new WaitForSeconds(dash_coolDown);
+        readyToDash = true;
     }
 }

@@ -24,10 +24,10 @@ public class PlayerLocomotion : MonoBehaviour
     public bool isJumping;
     public bool readyDBJump = false;
 
-    [Header("Handle Dash")]
+    /*[Header("Handle Dash")]
     public float dash_force;
     public bool readyToDash = true;
-    public float dash_coolDown;
+    public float dash_coolDown;*/
 
     [Header("Power Up System")]
     public bool hasPowerUp = false;
@@ -59,7 +59,7 @@ public class PlayerLocomotion : MonoBehaviour
     private void Awake()
     {
         isGround = true;
-        readyToDash = true;
+        //readyToDash = true;
         currentJump = jumpingHeight;
         playerState = GetComponent<PlayerState>();
         animationManager = GetComponent<AnimationManager>();
@@ -289,17 +289,21 @@ public class PlayerLocomotion : MonoBehaviour
 
     }
 
-    public void HanldeDashing()
+    /*public void HanldeDashing()
     {
+        if (playerManager.isInteracting)
+            return;
+
         if (readyToDash == true)
         {
+            Debug.Log("Dash");
             readyToDash = false;
-            StartCoroutine(HandleCountDownDash());
+            animationManager.PlayerTargetAnimation("flash", true);
             Vector3 playerLook = new Vector3(transform.forward.x * dash_force, 0f, transform.forward.z * dash_force);
             playerRb.AddForce(playerLook, ForceMode.Impulse);
             StartCoroutine(HandleCountDownDash());
         }
-    }
+    }*/
 
     IEnumerator CountDownPower()
     {
@@ -311,9 +315,9 @@ public class PlayerLocomotion : MonoBehaviour
         Debug.Log("End power");
     }
 
-    IEnumerator HandleCountDownDash()
+    /*IEnumerator HandleCountDownDash()
     {
         yield return new WaitForSeconds(dash_coolDown);
         readyToDash = true;
-    }
+    }*/
 }
